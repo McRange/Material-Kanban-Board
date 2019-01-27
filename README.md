@@ -12,9 +12,11 @@ If you don't to know how to install this Plug-in in Apex, please take look at th
 Try my demo application:
 
 https://apex.oracle.com/pls/apex/f?p=PLUGINSBYRANGE:2
+
 Login: demo / demo
 
 This plugin is based on other projects:
+
 https://github.com/RonnyWeiss/Material-Dashboard-Cards-as-HTML-or-for-Apex
 by Ronny Weiß
 
