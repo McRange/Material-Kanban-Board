@@ -1,0 +1,2 @@
+# Material-Kanban-Board
+This plugin allows easy integration of a Kanban board into your own application. Your business processes can be grouped and visualized clearly. With Drag'n Drop you can move the cards between a dynamic number of columns. Adjust the icons, colors and other attributes to your personal needs. Expand the cards with any HTML content to display more information and enable more functions.
