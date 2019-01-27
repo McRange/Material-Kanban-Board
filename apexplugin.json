@@ -1,0 +1,33 @@
+{
+    "name": "Material Kanban Board",
+    "version": "1.0",
+    "description": "This plugin allows easy integration of a Kanban board into your own application. Your business processes can be grouped and visualized clearly. With Drag'n Drop you can move the cards between a dynamic number of columns. Adjust the icons, colors and other attributes to your personal needs. Expand the cards with any HTML content to display more information and enable more functions.",
+    "keywords": ["oracle", "apex", "plugin", "kanban", "region", "card", "material", "responsive", "drag", "drop", "process", "flow"],
+    "homepage": "https://github.com/McRange/Material-Kanban-Board",
+    "bugs": {
+        "url": "https://github.com/McRange/Material-Kanban-Board/issues",
+        "email": "mcrange@gmx.de"
+    },
+    "license": "MIT",
+    "author": {
+        "name": "Matthias Ramge",
+        "email": "mcrange@gmx.de",
+        "donationUrl": "https://www.paypal.me/mcrange"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/McRange/Material-Kanban-Board.git"
+    },
+    "oracle": {
+        "versions": ["11.2.0.1", "12.1.0.1", "12.2.0.1"],
+        "apex": {
+            "versions": ["5.1.0", "5.1.1", "5.1.2", "5.1.3", "5.1.4", "18.1", "18.2"],
+            "plugin": {
+                "internalName": "MATERIAL.KANBAN",
+                "type": "region",
+                "demo": "https://apex.oracle.com/pls/apex/f?p=PLUGINSBYRANGE:2",
+                "previewImage": "https://raw.githubusercontent.com/McRange/Material-Kanban-Board/master/screenshot.gif"
+            }
+        }
+    }
+}
