@@ -1,6 +1,6 @@
 var materialKanban = (function () {
     "use strict";
-    var scriptVersion = "1.0";
+    var scriptVersion = "1.0.1";
     var util = {
         version: "1.0.2b",
         escapeHTML: function (str) {
@@ -182,7 +182,6 @@ var materialKanban = (function () {
             /* get parent */
             var parent = $("#" + parentID);
 
-
             if (parent.length > 0) {
 
                 /* define container and add it to parent */
@@ -320,7 +319,8 @@ var materialKanban = (function () {
                     groupColWidth = (configJSON.groupExtension ? (100 / ((columnsData.length * 12 / configJSON.groupColWidth) + 1)) : 0);
                     itemColWidth = (100 - groupColWidth) / columnsData.length;
 
-
+                    groupColWidth = Math.floor(groupColWidth * 100) / 100;
+                    itemColWidth = Math.floor(itemColWidth * 100) / 100;
 
                     drawHeaderRegion(container);
                     var cardContainer = drawRow(container);
@@ -629,11 +629,6 @@ var materialKanban = (function () {
                 }
 
                 parent.append(card);
-                /*
-
-                col.append(card);
-
-                parent.append(col);*/
             }
 
             /***********************************************************************
@@ -705,7 +700,7 @@ var materialKanban = (function () {
                 var sourceItemIndex = 0;
                 var sourceItemSibling = null;
 
-                drake = dragula($('.kb-item-container').toArray(), {
+                drake = dragula($(parent.find('.kb-item-container')).toArray(), {
                     direction: 'vertical',
                     accepts: function (el, target, source, sibling) {
 
@@ -716,7 +711,6 @@ var materialKanban = (function () {
                         /* check if the Group ID of target and source group are equal */
                         return $(source).closest('.kb-row').attr("groupid") == $(target).closest('.kb-row').attr("groupid");
                     }
-
                 });
 
                 /*                    
