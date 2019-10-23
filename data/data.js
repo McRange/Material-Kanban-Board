@@ -9,6 +9,9 @@ var dataJSON = {
         "GROUP_TITLE": "Lgiklhmzjn gzuekrrbgmwq",
         "GROUP_ICON": "fa-cogs",
         "GROUP_FOOTER": "osvqmggoxlyqce crrjeawwsytsdv jbydbynsogyxw zcmjjklms",
+        "GROUP_NEW_ITEM_LINK": "https://google.com",
+        "GROUP_COLLAPESED": 1,
+        "NEW_GROUP_LINK": "https://google.com",
         "ID": 1012,
         "TITLE": "Irhlonoby xulledz",
         "FOOTER": "lhtomzxiexepci rcayaosdbzguq iuyqxttiiamjt qjsuaujms",
@@ -291,7 +294,7 @@ var configJSON = {
     }],
     "dynamicColumns": true,
     "groupExtension": true,
-    "groupColWidth": 6,
-    "allowDragItemsBetweenGroups": true,
+    "groupColWidth": 8,
+    "groupCollapsible": true,
     "printDataToConsole": false
 };

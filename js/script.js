@@ -1,6 +1,6 @@
 var materialKanban = (function () {
     "use strict";
-    var scriptVersion = "1.0.1";
+    var scriptVersion = "1.1.0";
     var util = {
         version: "1.0.2b",
         escapeHTML: function (str) {
@@ -146,7 +146,7 @@ var materialKanban = (function () {
     return {
         /* Initialize function for cards */
         initialize: function (
-            parentID, ajaxID, noDataFoundMessage, udConfigJSON, items2Submit, bindRefreshOnId, escapeRequired, enableDragnDrop) {
+            parentID, ajaxID, noDataFoundMessage, udConfigJSON, items2Submit, bindRefreshOnId, escapeRequired, enableDragnDrop, enableDragnDropGroups) {
             var stdConfigJSON = {
                 "refresh": 0,
                 "staticColumns": [{
@@ -166,6 +166,7 @@ var materialKanban = (function () {
                 "groupExtension": false,
                 "groupColWidth": 6,
                 "allowDragItemsBetweenGroups": false,
+                "groupCollapsible": false,
                 "printDataToConsole": false
             };
 
@@ -174,7 +175,8 @@ var materialKanban = (function () {
 
             var columnsData = configJSON.staticColumns;
             var lastItemsData = null;
-            var drake = null;
+            var drakeItems = null;
+            var drakeGroups = null;
             var container = null;
             var groupColWidth = 0;
             var itemColWidth = 100;
@@ -194,8 +196,11 @@ var materialKanban = (function () {
                 try {
                     apex.jQuery("#" + bindRefreshOnId).bind("apexrefresh", function () {
                         if (container.children('span').length == 0) {
-                            if (drake) {
-                                drake.destroy();
+                            if (drakeItems) {
+                                drakeItems.destroy();
+                            }
+                            if (drakeGroups) {
+                                drakeGroups.destroy();
                             }
                             getData();
                         }
@@ -209,8 +214,11 @@ var materialKanban = (function () {
                 if (configJSON.refresh > 0) {
                     setInterval(function () {
                         if (container.children('span').length == 0) {
-                            if (drake) {
-                                drake.destroy();
+                            if (drakeItems) {
+                                drakeItems.destroy();
+                            }
+                            if (drakeGroups) {
+                                drakeGroups.destroy();
                             }
                             getData();
                         }
@@ -324,11 +332,12 @@ var materialKanban = (function () {
 
                     drawHeaderRegion(container);
                     var cardContainer = drawRow(container);
+                    cardContainer.addClass("kb-group-container");
 
                     /* draw items and add it to the container */
                     if (itemsData.row && itemsData.row.length > 0) {
 
-                        /* group items by defined groups if group extension is uses */
+                        /* group items by defined groups if group extension is set */
                         var itemsGroupedData = util.groupBy(itemsData.row,
                             function (itemGroupData) {
                                 return configJSON.groupExtension ? itemGroupData.GROUP_ID : 1
@@ -344,17 +353,46 @@ var materialKanban = (function () {
                             groupRow.attr("groupid", key);
 
                             if (configJSON.groupExtension) {
-
                                 drawGroupRegion(groupRow, itemGroupedData[0]);
                             };
 
                             $.each(columnsData, function (index, columnData) {
                                 drawItemRegion(groupRow, itemGroupedData, columnData);
                             });
+
+                            // add collapsable feature to buttons
+                            if (configJSON.groupExtension && configJSON.groupCollapsible) {
+                                groupRow.find(".kb-collapsable").click(function () {
+                                    toggleGroup(groupRow, true);
+                                });
+
+                                // set initial collapse status
+                                if (itemGroupedData[0].GROUP_COLLAPESED === 1) {
+                                    toggleGroup(groupRow, false);
+                                }
+                            }
+
                         });
 
+                        /* check for new group link */
+                        var itemsWithNewGroupLink = itemsData.row.filter(
+                            function (itemData) {
+                                return itemData.NEW_GROUP_LINK;
+                            });
+
+
+                        // add new group button
+                        if (configJSON.groupExtension && itemsWithNewGroupLink.length > 0) {
+                            drawNewGroupCard(container, itemsWithNewGroupLink[0].NEW_GROUP_LINK);
+                        }
+
+                        /* add drag'n drop feature */
                         if (enableDragnDrop) {
-                            addDragula();
+                            addDragulaToItems();
+                            if (configJSON.groupExtension && enableDragnDropGroups) {
+                                addDragulaToGroups();
+                            }
+
                         }
 
                     } else {
@@ -454,7 +492,7 @@ var materialKanban = (function () {
                 groupRegionCol.attr("style", "width:" + groupColWidth + "%");
                 parent.append(groupRegionCol);
 
-                drawItemCard(
+                var groupcard = drawItemCard(
                     groupRegionCol, {
                         "isGroupCard": true,
                         "ID": groupData.GROUP_ID,
@@ -465,6 +503,26 @@ var materialKanban = (function () {
                         "FOOTER": groupData.GROUP_FOOTER,
                         "LINK": groupData.GROUP_LINK
                     });
+
+                groupcard.addClass("kb-group-card");
+
+                // add de/collapsible button
+                if (configJSON.groupCollapsible) {
+                    var collapsIcon = $("<i></i>");
+                    collapsIcon.addClass("fa fa-chevron-down");
+                    var collapsButton = $("<div></div>");
+                    collapsButton.addClass("kb-collapsable kb-collapse");
+                    collapsButton.append(collapsIcon);
+                    $(groupcard.find(".card-header")[0]).before(collapsButton);
+
+                    var expandIcon = $("<i></i>");
+                    expandIcon.addClass("fa fa-chevron-up");
+                    var expandButton = $("<div></div>");
+                    expandButton.addClass("kb-collapsable kb-expand");
+                    expandButton.append(expandIcon);
+                    $(groupcard.find(".card-header")[0]).before(expandButton);
+                    expandButton.attr("style", "display:none");
+                }
             }
 
             /***********************************************************************
@@ -629,6 +687,7 @@ var materialKanban = (function () {
                 }
 
                 parent.append(card);
+                return card;
             }
 
             /***********************************************************************
@@ -653,6 +712,23 @@ var materialKanban = (function () {
                 newItemRegion.append(link);
 
                 parent.append(newItemRegion);
+            }
+
+            /***********************************************************************
+             **
+             ** Draw new group card
+             **
+             ***********************************************************************/
+            function drawNewGroupCard(parent, url) {
+                var newGroupRow = drawRow(parent);
+                newGroupRow.addClass("kb-row");
+
+                var parent = newGroupRow;
+                var groupRegionCol = $("<div></div>");
+                groupRegionCol.addClass("kb-group-region kb-new-group-region");
+                parent.append(groupRegionCol);
+
+                drawNewCard(groupRegionCol, url);
             }
 
             /***********************************************************************
@@ -692,15 +768,36 @@ var materialKanban = (function () {
 
             /***********************************************************************
              **
-             ** Used to handle drag'n Drop events
+             ** Used to toggle collapse / expande group
              **
              ***********************************************************************/
-            function addDragula() {
+            function toggleGroup(groupRow, triggerEvent) {
+                groupRow.find(".kb-collapsable").toggle();
+                groupRow.find(".card-footer").toggle();
+                groupRow.find(".kb-item-region").toggle();
+                var group = groupRow.find(".kb-group-region");
+                group.toggleClass("kb-collapsed");
+
+                if (triggerEvent) {
+                    var collapsedData = {
+                        "groupId": groupRow.attr("groupid"),
+                        "collapsed": group.hasClass("kb-collapsed")
+                    };
+                    parent.trigger('materialkanbangroupcollapsed', [collapsedData]);
+                }
+            }
+
+            /***********************************************************************
+             **
+             ** Used to handle drag'n Drop events for items
+             **
+             ***********************************************************************/
+            function addDragulaToItems() {
 
                 var sourceItemIndex = 0;
                 var sourceItemSibling = null;
 
-                drake = dragula($(parent.find('.kb-item-container')).toArray(), {
+                drakeItems = dragula($(parent.find('.kb-item-container')).toArray(), {
                     direction: 'vertical',
                     accepts: function (el, target, source, sibling) {
 
@@ -717,13 +814,14 @@ var materialKanban = (function () {
                 On mobile this prevents the default page scrolling while dragging an item. 
                 https://github.com/bevacqua/dragula/issues/487
                 */
-                $('.kb-card').each(function (index, card) {
+                $('.kb-item-container > .kb-card').each(function (index, card) {
+                    $(card).addClass("kb-card-draggable");
                     card.addEventListener('touchmove', function (event) {
                         event.preventDefault();
                     });
                 });
 
-                drake.on("drag", function (el, source) {
+                drakeItems.on("drag", function (el, source) {
                     var _el = $(el);
                     var _source = $(source);
 
@@ -740,7 +838,7 @@ var materialKanban = (function () {
 
                     parent.trigger('materialkanbandrag', [dragData]);
                 });
-                drake.on("drop", function (el, target, source, sibling) {
+                drakeItems.on("drop", function (el, target, source, sibling) {
                     var _el = $(el);
                     var _target = $(target);
                     var _source = $(source);
@@ -806,6 +904,110 @@ var materialKanban = (function () {
                     updateCardHeader(_el, _target.attr("columnid"));
 
                     parent.trigger('materialkanbandrop', [dropData]);
+                });
+            }
+
+            /***********************************************************************
+             **
+             ** Used to handle drag'n Drop events for groups
+             **
+             ***********************************************************************/
+            function addDragulaToGroups() {
+
+                var sourceItemIndex = 0;
+                var sourceItemSibling = null;
+
+                drakeGroups = dragula($(parent.find('.kb-group-container')).toArray(), {
+                    direction: 'vertical',
+                    moves: function (el, container, handle) {
+                        var groupcard = $(handle).closest('.kb-group-card');
+                        return groupcard.length > 0;
+                    }
+                });
+
+                /*                    
+                On mobile this prevents the default page scrolling while dragging an item. 
+                https://github.com/bevacqua/dragula/issues/487
+                */
+                $('.kb-group-region > .kb-card').each(function (index, card) {
+                    $(card).addClass("kb-card-draggable");
+                    card.addEventListener('touchmove', function (event) {
+                        event.preventDefault();
+                    });
+                });
+
+
+                drakeGroups.on("drag", function (el, source) {
+                    var _el = $(el);
+                    sourceItemIndex = _el.index();
+                    var next = _el.next();
+                    sourceItemSibling = next.length > 0 ? $(next[0]) : null;
+
+                    var dragData = {
+                        "groupId": _el.attr("groupid"),
+                        "sourceGroupIndex": sourceItemIndex
+                    };
+
+                    /*
+                    console.log("drag group " +
+                        dragData.groupId + " from " +
+                        dragData.sourceGroupIndex
+                    );
+                    */
+
+                    parent.trigger('materialkanbandraggroup', [dragData]);
+                });
+                drakeGroups.on("drop", function (el, target, source, sibling) {
+                    var _el = $(el);
+                    var _target = $(target);
+                    var _source = $(source);
+
+                    var dropData = {
+                        "groupId": _el.attr("groupid"),
+                        "sourceGroupIndex": sourceItemIndex,
+                        "targetGroupIndex": _el.index()
+                    };
+
+                    /*
+                    console.log("moved group " +
+                        dropData.groupId + " from " +
+                        dropData.sourceGroupIndex + " to " +
+                        dropData.targetGroupIndex
+                    );
+                    */
+
+                    try {
+                        apex.server.plugin(
+                            ajaxID, {
+                                pageItems: items2Submit,
+                                x01: "moveGroup",
+                                x02: dropData.groupId,
+                                x03: dropData.sourceGroupIndex,
+                                x04: dropData.targetGroupIndex
+                            }, {
+                                success: function (d) {
+                                    /*console.log(d);*/
+                                },
+                                error: function (d) {
+                                    /* move item back to last knwon position */
+                                    if (sourceItemSibling) {
+                                        _el.insertBefore(sourceItemSibling);
+                                    } else {
+                                        _source.append(_el);
+                                    }
+
+                                    console.error(d.responseText);
+
+                                    parent.trigger('materialkanbandroperror', [dropData]);
+                                },
+                                dataType: "json"
+                            });
+                    } catch (e) {
+                        console.log("Can't call server on drag'n drop event. Apex is missing");
+                        console.log(e);
+                    }
+
+                    parent.trigger('materialkanbandropgroup', [dropData]);
                 });
             }
         }

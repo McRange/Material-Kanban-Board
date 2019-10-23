@@ -76,6 +76,10 @@
     overflow: hidden;
 }
 
+.kb-card-draggable {
+    cursor: grab;
+}
+
 .kb-card:hover {
     background: #fff;
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
@@ -171,6 +175,30 @@
     background: #39a6da;
 }
 
+.kb-collapsable {
+    float: left;
+    text-align: center;
+    margin: 6px 1px 6px 7px;
+    cursor: pointer;
+}
+
+.kb-collapsable i {
+    font-size: 15px;
+    line-height: 28px;
+    width: 18px;
+    /*height: 28px;*/
+    color: #000;
+}
+
+.kb-collapsable:hover {
+    margin: 5px 0px 5px 6px;
+    border: 1px solid #eee;
+}
+
+.kb-collapsed {
+    width: 100% !important;
+}
+
 /*
 @media only screen and (max-width: 1279px) {
 
@@ -232,6 +260,10 @@
         border-radius: 5px;
         border-top: 5px solid #aaa;
         border-left: 5px solid #aaa;
+    }
+
+    .kb-new-group-region > div {
+        border-top: none;
     }
 
     .kb-group-region .kb-card {
