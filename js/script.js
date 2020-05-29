@@ -657,18 +657,19 @@ var materialKanban = (function () {
                 cardHeader.addClass("card-header");
 
                 /* add icon to card header */
-                if (cardData.ICON || (columnData && columnData.COLUMN_ICON)) {
-                    var icon = $("<i></i>");
-                    icon.addClass("fa " + (cardData.ICON || columnData.COLUMN_ICON));
+                if(cardData.ICON !== "none") {
+                    if (cardData.ICON || (columnData && columnData.COLUMN_ICON)) {
+                        var icon = $("<i></i>");
+                        icon.addClass("fa " + (cardData.ICON || columnData.COLUMN_ICON));
 
-                    if ((cardData.ICON_COLOR && cardData.ICON_COLOR.length > 0) || (columnData && columnData.COLUMN_ICON_COLOR && columnData.COLUMN_ICON_COLOR.length > 0)) {
+                        if ((cardData.ICON_COLOR && cardData.ICON_COLOR.length > 0) || (columnData && columnData.COLUMN_ICON_COLOR && columnData.COLUMN_ICON_COLOR.length > 0)) {
 
-                        icon.attr("style", "color:" + (cardData.ICON_COLOR || columnData.COLUMN_ICON_COLOR));
+                            icon.attr("style", "color:" + (cardData.ICON_COLOR || columnData.COLUMN_ICON_COLOR));
+                        }
+
+                        cardHeader.append(icon);
                     }
-
-                    cardHeader.append(icon);
                 }
-
                 /* add header styles */
                 if (cardData.HEADER_STYLE) {
                     /* add header styles */
