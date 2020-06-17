@@ -590,7 +590,10 @@ var materialKanban = (function () {
                             cardData.ICON_COLOR = util.escapeHTML(cardData.ICON_COLOR);
                             cardData.HEADER_STYLE = util.escapeHTML(cardData.HEADER_STYLE);
                             cardData.TITLE = util.escapeHTML(cardData.TITLE);
+                            cardData.TITLE_STYLE = util.escapeHTML(cardData.TITLE_STYLE);
                             cardData.FOOTER = util.escapeHTML(cardData.FOOTER);
+                            cardData.FILL_BG_COLOR = util.escapeHTML(cardData.FILL_BG_COLOR);
+                            cardData.FILL_BG_WIDTH = util.escapeHTML(cardData.FILL_BG_WIDTH);
                         }
 
                         drawItemCard(
@@ -601,8 +604,11 @@ var materialKanban = (function () {
                                 "ICON_COLOR": cardData.ICON_COLOR,
                                 "HEADER_STYLE": cardData.HEADER_STYLE,
                                 "TITLE": cardData.TITLE,
+                                "TITLE_STYLE": cardData.TITLE_STYLE,
                                 "FOOTER": cardData.FOOTER,
-                                "LINK": cardData.LINK
+                                "LINK": cardData.LINK,
+                                "FILL_BG_COLOR": cardData.FILL_BG_COLOR,
+                                "FILL_BG_WIDTH": cardData.FILL_BG_WIDTH
                             },
                             columnData);
                     });
@@ -624,23 +630,48 @@ var materialKanban = (function () {
 
                 card.attr("itemid", cardData.ID);
 
+                if(cardData.FILL_BG_COLOR || cardData.FILL_BG_WIDTH) {
+
+                    /* define background color (fillable) */
+                    var cardBgFillable = $("<div></div>");
+                    cardBgFillable.addClass("card-bg-fillable");
+
+                    /* background filling color */
+                    if (cardData.FILL_BG_COLOR) {
+                        cardBgFillable.css("background-color", cardData.FILL_BG_COLOR);
+                    } else if(columnData && columnData.COLUMN_COLOR) {
+                        /* if bg filling color is not informed, column color is used with opacity (lower color intensity) */
+                        cardBgFillable.css("background-color", columnData.COLUMN_COLOR);
+                        cardBgFillable.css("opacity", '0.2');
+                    }
+
+                    if (cardData.FILL_BG_WIDTH) {
+                        cardBgFillable.css("width", cardData.FILL_BG_WIDTH + '%');
+                    } else {
+                        /* we force 100% if there's a bg filling color configured (else will not enter here) */
+                        cardBgFillable.css("width", "100%");
+                    }
+                    card.append(cardBgFillable);
+                }
+
                 /* define header for card */
                 var cardHeader = $("<div></div>");
                 cardHeader.addClass("card-header");
 
                 /* add icon to card header */
-                if (cardData.ICON || (columnData && columnData.COLUMN_ICON)) {
-                    var icon = $("<i></i>");
-                    icon.addClass("fa " + (cardData.ICON || columnData.COLUMN_ICON));
+                if(cardData.ICON !== "none") {
+                    if (cardData.ICON || (columnData && columnData.COLUMN_ICON)) {
+                        var icon = $("<i></i>");
+                        icon.addClass("fa " + (cardData.ICON || columnData.COLUMN_ICON));
 
-                    if ((cardData.ICON_COLOR && cardData.ICON_COLOR.length > 0) || (columnData && columnData.COLUMN_ICON_COLOR && columnData.COLUMN_ICON_COLOR.length > 0)) {
+                        if ((cardData.ICON_COLOR && cardData.ICON_COLOR.length > 0) || (columnData && columnData.COLUMN_ICON_COLOR && columnData.COLUMN_ICON_COLOR.length > 0)) {
 
-                        icon.attr("style", "color:" + (cardData.ICON_COLOR || columnData.COLUMN_ICON_COLOR));
+                            icon.attr("style", "color:" + (cardData.ICON_COLOR || columnData.COLUMN_ICON_COLOR));
+                        }
+
+                        cardHeader.append(icon);
                     }
-
-                    cardHeader.append(icon);
                 }
-
                 /* add header styles */
                 if (cardData.HEADER_STYLE) {
                     /* add header styles */
@@ -658,7 +689,8 @@ var materialKanban = (function () {
 
                 /* add title to body */
                 var title = (cardData.TITLE) ? cardData.TITLE : '';
-                cardBody.append('<p class="title">' + title + '</p>');
+                var title_style = (cardData.TITLE_STYLE) ? cardData.TITLE_STYLE : '';
+                cardBody.append('<p class="title" style="' + title_style + '">' + title + '</p>');
 
                 /* append body to card */
                 if (cardData.LINK) {

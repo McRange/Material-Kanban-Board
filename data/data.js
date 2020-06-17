@@ -17,7 +17,9 @@ var dataJSON = {
         "FOOTER": "lhtomzxiexepci rcayaosdbzguq iuyqxttiiamjt qjsuaujms",
         "ICON": "fa-rocket",
         "ICON_COLOR": "black;",
-        "HEADER_STYLE": "background:#FFD700;"
+        "HEADER_STYLE": "background:#FFD700;",
+        "FILL_BG_COLOR": "",
+        "FILL_BG_WIDTH": "40"
     }, {
         "COLUMN_ID": 1,
         "COLUMN_TITLE": "To Do",
@@ -33,7 +35,9 @@ var dataJSON = {
         "FOOTER": "uhkicpspqcyx gtyscbgbsx sdayyaari ozphxohwa",
         "ICON": "",
         "ICON_COLOR": "",
-        "HEADER_STYLE": ""
+        "HEADER_STYLE": "",
+        "FILL_BG_COLOR": "bisque",
+        "FILL_BG_WIDTH": "60"
     }, {
         "COLUMN_ID": 1,
         "COLUMN_TITLE": "To Do",
@@ -49,7 +53,9 @@ var dataJSON = {
         "FOOTER": "vtdxhctqb vyfvdnrt ayapryykqgyx akscazxottnmh",
         "ICON": "fa-rocket",
         "ICON_COLOR": "black;",
-        "HEADER_STYLE": "background:#FFD700;"
+        "HEADER_STYLE": "background:#FFD700;",
+        "FILL_BG_COLOR": "",
+        "FILL_BG_WIDTH": ""
     }, {
         "COLUMN_ID": 1,
         "COLUMN_TITLE": "To Do",
@@ -65,7 +71,9 @@ var dataJSON = {
         "FOOTER": "nrdspkdyvxn xpnfiksffi qhamedsdyd pohsgwjldjidoq",
         "ICON": "",
         "ICON_COLOR": "",
-        "HEADER_STYLE": ""
+        "HEADER_STYLE": "",
+        "FILL_BG_COLOR": "",
+        "FILL_BG_WIDTH": ""
     }, {
         "COLUMN_ID": 1,
         "COLUMN_TITLE": "To Do",
@@ -81,7 +89,9 @@ var dataJSON = {
         "FOOTER": "sgzgmxvormaz rswxjsrf uasetouafaeno xgevneypwkr",
         "ICON": "",
         "ICON_COLOR": "",
-        "HEADER_STYLE": ""
+        "HEADER_STYLE": "",
+        "FILL_BG_COLOR": "",
+        "FILL_BG_WIDTH": ""
     }, {
         "COLUMN_ID": 1,
         "COLUMN_TITLE": "To Do",
@@ -97,7 +107,9 @@ var dataJSON = {
         "FOOTER": "gymkcnlmmi xtgxnpofwvhbsr laogsquah ztozqcdmtcvmk",
         "ICON": "",
         "ICON_COLOR": "",
-        "HEADER_STYLE": ""
+        "HEADER_STYLE": "",
+        "FILL_BG_COLOR": "",
+        "FILL_BG_WIDTH": ""
     }, {
         "COLUMN_ID": 1,
         "COLUMN_TITLE": "To Do",
@@ -113,7 +125,9 @@ var dataJSON = {
         "FOOTER": "bepdnuxxmz xpbpflzjfpizyt jbttuadhqwaz yumgzqnteertsx",
         "ICON": "",
         "ICON_COLOR": "",
-        "HEADER_STYLE": ""
+        "HEADER_STYLE": "",
+        "FILL_BG_COLOR": "",
+        "FILL_BG_WIDTH": ""
     }, {
         "COLUMN_ID": 2,
         "COLUMN_TITLE": "In Progress",
@@ -129,7 +143,9 @@ var dataJSON = {
         "FOOTER": "uqhipltke yyrbiherkba ymnkephaafew vtlszhwgbrc",
         "ICON": "",
         "ICON_COLOR": "",
-        "HEADER_STYLE": ""
+        "HEADER_STYLE": "",
+        "FILL_BG_COLOR": "darkgrey",
+        "FILL_BG_WIDTH": "80"
     }, {
         "COLUMN_ID": 2,
         "COLUMN_TITLE": "In Progress",
@@ -145,7 +161,9 @@ var dataJSON = {
         "FOOTER": "ubcknbnfxs crsbvsunsyg bqhqfhntbyfc tuqnmhwigpjsm",
         "ICON": "",
         "ICON_COLOR": "",
-        "HEADER_STYLE": ""
+        "HEADER_STYLE": "",
+        "FILL_BG_COLOR": "",
+        "FILL_BG_WIDTH": ""
     }, {
         "COLUMN_ID": 2,
         "COLUMN_TITLE": "In Progress",
@@ -161,7 +179,9 @@ var dataJSON = {
         "FOOTER": "gqijokwfbatx yrowztiux gzgsftoisbfr znezbrjutwq",
         "ICON": "fa-rocket",
         "ICON_COLOR": "black;",
-        "HEADER_STYLE": "background:#FFD700;"
+        "HEADER_STYLE": "background:#FFD700;",
+        "FILL_BG_COLOR": "",
+        "FILL_BG_WIDTH": ""
     }, {
         "COLUMN_ID": 2,
         "COLUMN_TITLE": "In Progress",
@@ -177,7 +197,9 @@ var dataJSON = {
         "FOOTER": "loqhbclyujwet wmqgkqvhtrotgo iijqvkqahofup auxbmhzz",
         "ICON": "",
         "ICON_COLOR": "",
-        "HEADER_STYLE": ""
+        "HEADER_STYLE": "",
+        "FILL_BG_COLOR": "",
+        "FILL_BG_WIDTH": ""
     }, {
         "COLUMN_ID": 2,
         "COLUMN_TITLE": "In Progress",
@@ -193,7 +215,9 @@ var dataJSON = {
         "FOOTER": "lrqfvdvsgjazri sgmkbwqzvwtyitx krlkmmuad vjmqjxnid",
         "ICON": "",
         "ICON_COLOR": "",
-        "HEADER_STYLE": ""
+        "HEADER_STYLE": "",
+        "FILL_BG_COLOR": "",
+        "FILL_BG_WIDTH": ""
     }, {
         "COLUMN_ID": 2,
         "COLUMN_TITLE": "In Progress",
@@ -209,7 +233,9 @@ var dataJSON = {
         "FOOTER": "wlokiposhu xklnmmvxzc vyihyvzhgzdh tvvkaygq",
         "ICON": "",
         "ICON_COLOR": "",
-        "HEADER_STYLE": ""
+        "HEADER_STYLE": "",
+        "FILL_BG_COLOR": "",
+        "FILL_BG_WIDTH": ""
     }, {
         "COLUMN_ID": 2,
         "COLUMN_TITLE": "In Progress",
@@ -225,7 +251,9 @@ var dataJSON = {
         "FOOTER": "omyhcmcxliht nnhkzcvdpxnqxq sgeguolxet elopuhqbogwxu",
         "ICON": "",
         "ICON_COLOR": "",
-        "HEADER_STYLE": ""
+        "HEADER_STYLE": "",
+        "FILL_BG_COLOR": "",
+        "FILL_BG_WIDTH": ""
     }, {
         "COLUMN_ID": 2,
         "COLUMN_TITLE": "In Progress",
@@ -241,7 +269,9 @@ var dataJSON = {
         "FOOTER": "udelqbdbmhysmib klurttgsyogvqqp omdfwsiue fgtoptqwbuycrs",
         "ICON": "",
         "ICON_COLOR": "",
-        "HEADER_STYLE": ""
+        "HEADER_STYLE": "",
+        "FILL_BG_COLOR": "",
+        "FILL_BG_WIDTH": ""
     }, {
         "COLUMN_ID": 3,
         "COLUMN_TITLE": "Done",
@@ -257,7 +287,9 @@ var dataJSON = {
         "FOOTER": "",
         "ICON": "",
         "ICON_COLOR": "",
-        "HEADER_STYLE": ""
+        "HEADER_STYLE": "",
+        "FILL_BG_COLOR": "",
+        "FILL_BG_WIDTH": ""
     }, {
         "COLUMN_ID": "",
         "COLUMN_TITLE": "",
@@ -273,7 +305,9 @@ var dataJSON = {
         "FOOTER": "",
         "ICON": "",
         "ICON_COLOR": "",
-        "HEADER_STYLE": ""
+        "HEADER_STYLE": "",
+        "FILL_BG_COLOR": "",
+        "FILL_BG_WIDTH": ""
     }]
 };
 
