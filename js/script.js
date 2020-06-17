@@ -590,6 +590,7 @@ var materialKanban = (function () {
                             cardData.ICON_COLOR = util.escapeHTML(cardData.ICON_COLOR);
                             cardData.HEADER_STYLE = util.escapeHTML(cardData.HEADER_STYLE);
                             cardData.TITLE = util.escapeHTML(cardData.TITLE);
+                            cardData.TITLE_STYLE = util.escapeHTML(cardData.TITLE_STYLE);
                             cardData.FOOTER = util.escapeHTML(cardData.FOOTER);
                             cardData.FILL_BG_COLOR = util.escapeHTML(cardData.FILL_BG_COLOR);
                             cardData.FILL_BG_WIDTH = util.escapeHTML(cardData.FILL_BG_WIDTH);
@@ -603,6 +604,7 @@ var materialKanban = (function () {
                                 "ICON_COLOR": cardData.ICON_COLOR,
                                 "HEADER_STYLE": cardData.HEADER_STYLE,
                                 "TITLE": cardData.TITLE,
+                                "TITLE_STYLE": cardData.TITLE_STYLE,
                                 "FOOTER": cardData.FOOTER,
                                 "LINK": cardData.LINK,
                                 "FILL_BG_COLOR": cardData.FILL_BG_COLOR,
@@ -687,7 +689,8 @@ var materialKanban = (function () {
 
                 /* add title to body */
                 var title = (cardData.TITLE) ? cardData.TITLE : '';
-                cardBody.append('<p class="title">' + title + '</p>');
+                var title_style = (cardData.TITLE_STYLE) ? cardData.TITLE_STYLE : '';
+                cardBody.append('<p class="title" style="' + title_style + '">' + title + '</p>');
 
                 /* append body to card */
                 if (cardData.LINK) {
