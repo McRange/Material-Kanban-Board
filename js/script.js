@@ -153,11 +153,11 @@ var materialKanban = (function () {
                     "COLUMN_ID": "1",
                     "COLUMN_TITLE": "To Do",
                     "COLUMN_ICON": "fa-calendar"
-                                    }, {
+                }, {
                     "COLUMN_ID": "2",
                     "COLUMN_TITLE": "In Progress",
                     "COLUMN_ICON": "fa-wrench"
-                                    }, {
+                }, {
                     "COLUMN_ID": "3",
                     "COLUMN_TITLE": "Done",
                     "COLUMN_ICON": "fa-check"
@@ -242,21 +242,21 @@ var materialKanban = (function () {
 
                     apex.server.plugin(
                         ajaxID, {
-                            pageItems: items2Submit,
-                            x01: "getData",
-                        }, {
-                            success: function (data) {
-                                parent.trigger('materialkanbandataloaded');
-                                drawKanbanRegion(data);
-                                parent.trigger('materialkanbandatarendered');
-                            },
-                            error: function (data) {
-                                container.empty();
-                                console.log(data.responseText);
-                                //container.append("<span>Error occured please check console for more information</span>");
-                            },
-                            dataType: "json"
-                        });
+                        pageItems: items2Submit,
+                        x01: "getData",
+                    }, {
+                        success: function (data) {
+                            parent.trigger('materialkanbandataloaded');
+                            drawKanbanRegion(data);
+                            parent.trigger('materialkanbandatarendered');
+                        },
+                        error: function (data) {
+                            container.empty();
+                            console.log(data.responseText);
+                            //container.append("<span>Error occured please check console for more information</span>");
+                        },
+                        dataType: "json"
+                    });
                 } else {
                     try {
                         util.loader.start(container);
@@ -312,6 +312,7 @@ var materialKanban = (function () {
                         columnData.COLUMN_ICON_COLOR = util.escapeHTML(columnData.COLUMN_ICON_COLOR);
                         columnData.COLUMN_HEADER_STYLE = util.escapeHTML(columnData.COLUMN_HEADER_STYLE);
                         columnData.COLUMN_COLOR = util.escapeHTML(columnData.COLUMN_COLOR);
+                        columnData.COLUMN_STATE = util.escapeHTML(columnData.COLUMN_STATE);
                     }
 
                     if (columnData.COLUMN_COLOR == undefined) {
@@ -494,15 +495,15 @@ var materialKanban = (function () {
 
                 var groupcard = drawItemCard(
                     groupRegionCol, {
-                        "isGroupCard": true,
-                        "ID": groupData.GROUP_ID,
-                        "ICON": groupData.GROUP_ICON,
-                        "ICON_COLOR": groupData.GROUP_ICON_COLOR,
-                        "HEADER_STYLE": groupData.GROUP_HEADER_STYLE,
-                        "TITLE": groupData.GROUP_TITLE,
-                        "FOOTER": groupData.GROUP_FOOTER,
-                        "LINK": groupData.GROUP_LINK
-                    });
+                    "isGroupCard": true,
+                    "ID": groupData.GROUP_ID,
+                    "ICON": groupData.GROUP_ICON,
+                    "ICON_COLOR": groupData.GROUP_ICON_COLOR,
+                    "HEADER_STYLE": groupData.GROUP_HEADER_STYLE,
+                    "TITLE": groupData.GROUP_TITLE,
+                    "FOOTER": groupData.GROUP_FOOTER,
+                    "LINK": groupData.GROUP_LINK
+                });
 
                 groupcard.addClass("kb-group-card");
 
@@ -584,6 +585,7 @@ var materialKanban = (function () {
                     /* define row and add it to the container */
 
                     $.each(cardsData, function (index, cardData) {
+                        apex.debug.message(cardsData);
                         if (escapeRequired !== false) {
                             cardData.ID = util.escapeHTML(cardData.ID);
                             cardData.ICON = util.escapeHTML(cardData.ICON);
@@ -591,19 +593,23 @@ var materialKanban = (function () {
                             cardData.HEADER_STYLE = util.escapeHTML(cardData.HEADER_STYLE);
                             cardData.TITLE = util.escapeHTML(cardData.TITLE);
                             cardData.FOOTER = util.escapeHTML(cardData.FOOTER);
+                            cardData.STATE_NAME = util.escapeHTML(cardData.STATE_NAME);
+                            cardData.DUE_DATE = util.escapeHTML(cardData.DUE_DATE);
                         }
 
                         drawItemCard(
                             parent, {
-                                "isGroupCard": false,
-                                "ID": cardData.ID,
-                                "ICON": cardData.ICON,
-                                "ICON_COLOR": cardData.ICON_COLOR,
-                                "HEADER_STYLE": cardData.HEADER_STYLE,
-                                "TITLE": cardData.TITLE,
-                                "FOOTER": cardData.FOOTER,
-                                "LINK": cardData.LINK
-                            },
+                            "isGroupCard": false,
+                            "ID": cardData.ID,
+                            "ICON": cardData.ICON,
+                            "ICON_COLOR": cardData.ICON_COLOR,
+                            "HEADER_STYLE": cardData.HEADER_STYLE,
+                            "TITLE": cardData.TITLE,
+                            "FOOTER": cardData.FOOTER,
+                            "LINK": cardData.LINK,
+                            "STATE_NAME": cardData.STATE_NAME,
+                            "DUE_DATE": cardData.DUE_DATE
+                        },
                             columnData);
                     });
                 }
@@ -659,14 +665,26 @@ var materialKanban = (function () {
                 /* add title to body */
                 var title = (cardData.TITLE) ? cardData.TITLE : '';
                 cardBody.append('<p class="title">' + title + '</p>');
+                
+                /* create state and due date */
+                var state = (cardData.STATE_NAME) ? cardData.STATE_NAME : '';
+                var dueDate = (cardData.DUE_DATE) ? cardData.DUE_DATE : '';
+                var stateDiv = $("<div class = 'state card-attribute'></div>");
+                var dueDateDiv = $("<div class = 'due-date card-attribute'></div>");
+                stateDiv.append('<p class="state">State: ' + state + '</p>');
+                dueDateDiv.append('<p class="due_date"><i class ="fa fa-calendar-check"></i> ' + dueDate + '</p>')
 
-                /* append body to card */
+                /* append body and card attribute to card */
                 if (cardData.LINK) {
                     var link = $("<a></a>");
                     link.attr("href", cardData.LINK);
                     link.append(cardBody);
+                    link.append(stateDiv);
+                    link.append(dueDateDiv);
                     card.append(link);
                 } else {
+                    card.append(stateDiv);
+                    card.append(dueDateDiv);
                     card.append(cardBody);
                 }
 
@@ -745,12 +763,18 @@ var materialKanban = (function () {
                     return itemData.ID == cardId;
                 });
 
+                apex.debug.message(cardData);
+
                 var columnData = columnsData.find(function (columnData) {
                     return columnData.COLUMN_ID == columnId;
                 });
 
+                apex.debug.message(columnData);
+
                 var cardHeader = _card.find(".card-header");
                 var icon = cardHeader.find("i");
+
+                apex.debug.message((cardData && cardData.ICON) || (columnData && columnData.COLUMN_ICON));
 
                 if ((cardData && cardData.ICON) || (columnData && columnData.COLUMN_ICON)) {
 
@@ -760,10 +784,22 @@ var materialKanban = (function () {
                         icon.attr("style", "color:" + (cardData.ICON_COLOR || columnData.COLUMN_ICON_COLOR));
                     }
                 }
+                console.log(_card);
+                if (columnData.COLUMN_STATE) {
+                    var stateRegion = _card.find("p.state");
+                    stateRegion.text('State: ' + columnData.COLUMN_STATE);
+                    
+                }
 
                 if (!cardData.HEADER_STYLE && columnData && columnData.COLUMN_COLOR) {
                     cardHeader.attr("style", "background:" + columnData.COLUMN_COLOR);
                 }
+                
+                /*synchronize card's data */
+                cardData.COLUMN_STATE = columnData.COLUMN_STATE;
+                cardData.STATE_NAME = columnData.COLUMN_SATE;
+                cardData.COLUMN_TITLE = columnData.COLUMN_TITLE;
+                cardData.COLUMN_ID = columnData.COLUMN_ID;
             }
 
             /***********************************************************************
@@ -868,34 +904,34 @@ var materialKanban = (function () {
                     try {
                         apex.server.plugin(
                             ajaxID, {
-                                pageItems: items2Submit,
-                                x01: "moveItem",
-                                x02: dropData.itemId,
-                                x03: dropData.sourceGroupId,
-                                x04: dropData.sourceColumnId,
-                                x05: dropData.sourceItemIndex,
-                                x06: dropData.targetGroupId,
-                                x07: dropData.targetColumnId,
-                                x08: dropData.targetItemIndex
-                            }, {
-                                success: function (d) {
-                                    /*console.log(d);*/
-                                },
-                                error: function (d) {
-                                    /* move item back to last knwon position */
-                                    if (sourceItemSibling) {
-                                        _el.insertBefore(sourceItemSibling);
-                                    } else {
-                                        _source.append(_el);
-                                    }
-                                    updateCardHeader(_el, _source.attr("columnid"));
+                            pageItems: items2Submit,
+                            x01: "moveItem",
+                            x02: dropData.itemId,
+                            x03: dropData.sourceGroupId,
+                            x04: dropData.sourceColumnId,
+                            x05: dropData.sourceItemIndex,
+                            x06: dropData.targetGroupId,
+                            x07: dropData.targetColumnId,
+                            x08: dropData.targetItemIndex
+                        }, {
+                            success: function (d) {
+                                /*console.log(d);*/
+                            },
+                            error: function (d) {
+                                /* move item back to last knwon position */
+                                if (sourceItemSibling) {
+                                    _el.insertBefore(sourceItemSibling);
+                                } else {
+                                    _source.append(_el);
+                                }
+                                updateCardHeader(_el, _source.attr("columnid"));
 
-                                    console.error(d.responseText);
+                                console.error(d.responseText);
 
-                                    parent.trigger('materialkanbandroperror', [dropData]);
-                                },
-                                dataType: "json"
-                            });
+                                parent.trigger('materialkanbandroperror', [dropData]);
+                            },
+                            dataType: "json"
+                        });
                     } catch (e) {
                         console.log("Can't call server on drag'n drop event. Apex is missing");
                         console.log(e);
@@ -979,29 +1015,29 @@ var materialKanban = (function () {
                     try {
                         apex.server.plugin(
                             ajaxID, {
-                                pageItems: items2Submit,
-                                x01: "moveGroup",
-                                x02: dropData.groupId,
-                                x03: dropData.sourceGroupIndex,
-                                x04: dropData.targetGroupIndex
-                            }, {
-                                success: function (d) {
-                                    /*console.log(d);*/
-                                },
-                                error: function (d) {
-                                    /* move item back to last knwon position */
-                                    if (sourceItemSibling) {
-                                        _el.insertBefore(sourceItemSibling);
-                                    } else {
-                                        _source.append(_el);
-                                    }
+                            pageItems: items2Submit,
+                            x01: "moveGroup",
+                            x02: dropData.groupId,
+                            x03: dropData.sourceGroupIndex,
+                            x04: dropData.targetGroupIndex
+                        }, {
+                            success: function (d) {
+                                /*console.log(d);*/
+                            },
+                            error: function (d) {
+                                /* move item back to last knwon position */
+                                if (sourceItemSibling) {
+                                    _el.insertBefore(sourceItemSibling);
+                                } else {
+                                    _source.append(_el);
+                                }
 
-                                    console.error(d.responseText);
+                                console.error(d.responseText);
 
-                                    parent.trigger('materialkanbandroperror', [dropData]);
-                                },
-                                dataType: "json"
-                            });
+                                parent.trigger('materialkanbandroperror', [dropData]);
+                            },
+                            dataType: "json"
+                        });
                     } catch (e) {
                         console.log("Can't call server on drag'n drop event. Apex is missing");
                         console.log(e);
